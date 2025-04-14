@@ -1,16 +1,17 @@
 import React, { useState } from "react";
 import { TextInput, StyleSheet, View, Text } from "react-native";
 
-export default function StyledTextInput() {
-  const [value, setValue] = useState("");
-
+export default function StyledTextInput(props: {
+  value: string;
+  setValue: (text: string) => void;
+}) {
   return (
     <View style={styles.container}>
       <TextInput
         style={styles.input}
-        placeholder="Type here..."
-        value={value}
-        onChangeText={setValue}
+        placeholder="הכנס משפט"
+        value={props.value}
+        onChangeText={props.setValue}
       />
     </View>
   );
@@ -19,19 +20,16 @@ export default function StyledTextInput() {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-  },
-  label: {
-    fontSize: 16,
-    marginBottom: 8,
-    textAlign: "left",
+    width: "80%",
   },
   input: {
     height: 50,
     borderWidth: 1,
     borderColor: "#aaa",
-    borderRadius: 10,
+    borderRadius: 30,
     paddingHorizontal: 15,
     fontSize: 18,
+    fontFamily: "StamAshkenazCLM",
     backgroundColor: "#fff",
   },
 });

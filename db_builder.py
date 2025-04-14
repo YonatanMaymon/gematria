@@ -1,19 +1,19 @@
 import sqlite3
 
-FILE_NAME = "nouns.txt"
+FILE_NAME = "adjectives.txt"
 
-
-# Establish connection to a local SQLite database file
-# If 'hebrew_words.db' doesn't exist, it will be created in the current directory.
+# Establish connection to the SQLite database file.
+# If 'hebrew_words.db' doesn't exist (or you've deleted it), it will be created.
 conn = sqlite3.connect('hebrew_words.db')
 cursor = conn.cursor()
 
-# Create a table to store Hebrew words and their gematria values
+# Create a table to store Hebrew words, their gematria values, and the new 'type' column.
 cursor.execute('''
     CREATE TABLE IF NOT EXISTS hebrew_words (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         word TEXT NOT NULL,
-        gematria_value INTEGER NOT NULL
+        gematria_value INTEGER NOT NULL,
+        type TEXT
     )
 ''')
 conn.commit()
@@ -27,27 +27,30 @@ gematria_map = {
     'ש': 300, 'ת': 400
 }
 
-def compute_gematria(hebrew_word:str):
+def compute_gematria(hebrew_word: str) -> int:
+    """Compute the gematria value of a given Hebrew word by summing up its letter values."""
     return sum(gematria_map.get(letter, 0) for letter in hebrew_word)
 
-# opens the file and read it line by line
+# Read the file and process each line.
 with open(FILE_NAME, 'r', encoding='utf-8') as file:
     lines = file.readlines()
 
-# inserting each word into the db
+# Insert each non-empty line from the file into the database with the computed gematria value.
 for line in lines:
     trimmed_word = line.strip()
-    if trimmed_word:  # This avoids processing empty lines
+    if trimmed_word:  # Avoid processing empty lines.
         gematria_value = compute_gematria(trimmed_word)
-        cursor.execute('INSERT INTO hebrew_words (word, gematria_value) VALUES (?, ?)',
-                       (trimmed_word, gematria_value))
+        cursor.execute(
+            'INSERT INTO hebrew_words (word, gematria_value, type) VALUES (?, ?, ?)',
+            (trimmed_word, gematria_value, 'adjective')
+        )
 conn.commit()
 
-# Query and print all rows
+# Query and print all rows from the table to verify the inserts.
 cursor.execute('SELECT * FROM hebrew_words')
 rows = cursor.fetchall()
 for row in rows:
     print(row)
 
-# Close the connection when done
+# Close the connection when done.
 conn.close()

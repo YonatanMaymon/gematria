@@ -25,7 +25,7 @@ export default function StyledText({
 
 const styles = StyleSheet.create({
   text: {
-    fontFamily: "stamashkenazclmWebfont",
+    fontFamily: "StamAshkenazCLM",
     color: COLORS.gold,
     textShadowColor: "#000",
     textShadowOffset: { width: 3, height: 3 },
