@@ -22,7 +22,13 @@ export default function Index() {
   useEffect(() => {
     if (results.length > 0) {
       setSelectedWord(results[Math.round(Math.random() * results.length)]);
-    }
+    } else if (selectedWord != null)
+      setSelectedWord({
+        id: -1,
+        word: "לא מוצא :(",
+        gematria_value: 0,
+        type: "",
+      });
   }, [results]);
 
   const handlePress = () => {
